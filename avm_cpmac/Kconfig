@@ -1,0 +1,123 @@
+#
+# AVM network configuration
+#
+
+config NET_VENDOR_AVM
+	bool "AVM network devices and alternative drivers"
+	default y
+	---help---
+	  If you are building a kernel for any current FRITZ!Box, you are
+	  strongly encouraged to use the alternative AVM network drivers.
+
+	  Note that the answer to this question doesn't directly affect the
+	  kernel: saying N will just cause the configurator to skip all
+	  the questions about AVM network drivers. If you say Y, you will be
+	  asked for your specific card in the following questions.
+
+if NET_VENDOR_AVM
+
+config AVM_NETWORK_ENHANCEMENTS
+	bool "AVM network enhancements"
+	select AVM_PROM_ENVIRONMENT
+	select AVM_RTNETLINK_ENHANCEMENT
+	depends on AVM_SAMMEL
+	help
+	  Enables AVM kernel enhancements that are required for AVM cpmac, and
+	  the AVM Sammeltreiber (avm_new).
+
+config AVM_CPMAC
+       tristate "AVM CPMAC support"
+	depends on AVM_NETWORK_ENHANCEMENTS
+       ---help---
+         This driver is developed for the FRITZ!Box network hardware.
+         To compile this driver as a module, choose M here.
+         The module will be called 'avm_cpmac'.
+
+config AVM_CPMAC_NUM_RX_BUFFERS
+       int "Number of Rx-Buffers"
+       depends on AVM_CPMAC
+       default 256
+
+config AVM_CPMAC_SWITCH
+       bool "Support for switches (currently ADM6996 family)"
+       depends on AVM_CPMAC
+       default y
+       help
+         Code for the ADMtek switch family ADM6996 (L, LC, FC)
+
+config AVM_CPMAC_ATH_PPA
+    bool "Support PPA like functions for Atheros hardware"
+    depends on AVM_CPMAC && ATHRS17_PHY && AVM_PA
+    default n
+    help
+      Supports direct MAC routing in the switch
+
+config AVM_CPMAC_ATH_PPA_HNAT
+    bool "Support PPA like functions for HNAT on Atheros hardware"
+    depends on AVM_CPMAC_ATH_PPA
+    default n
+    help
+      Supports direct NAT routing in the switch
+
+config AVM_SCATTER_GATHER
+       bool "Scatter Gather DMA-TX Support for AVMNET"
+       depends on AVM_CPMAC && (LANTIQ || ARCH_QCOM)
+       default n
+
+config AVM_TSO
+       bool "AVMNET TCP Segmentation Offload"
+       depends on AVM_SCATTER_GATHER && (ARCH_QCOM)
+       default n
+
+config AVM_UFO
+       bool "AVMNET UDP Fragmentation Offload"
+       depends on AVM_SCATTER_GATHER && (ARCH_QCOM)
+       default n
+
+config AVM_JUMBO
+       bool "AVMNET JumboFrame support"
+       depends on AVM_CPMAC && ARCH_QCOM
+       default n
+
+config AVMNET_DEBUG
+       bool "AVMNET IFX Debug"
+       depends on AVM_CPMAC && LANTIQ
+       default n
+       help
+         Enable Debug-Proc-Interface /proc/eth/dbg for Lantiq CPUs"
+
+config AVMNET_PROF_HOOKS
+       bool "AVMNET SIMPLE PROFILING function hooks"
+       depends on AVM_CPMAC && ARCH_QCOM && AVM_SIMPLE_PROFILING
+       default n
+
+config AVMNET_DEBUG_HAL
+       bool "AVMNET HAL Debug"
+       depends on AVM_CPMAC && LANTIQ
+       default n
+       help
+         Enable HAL Debug for Lantiq Datapath Drivers"
+
+config AVMNET_XMIT_DEBUG_BUFFER
+       bool "avmnet xmit debug sysfs"
+       depends on AVM_CPMAC
+       default n
+
+config LTQ_ETH_OAM
+       tristate "Ethernet OAM handler"
+       default n
+
+config AVMNET_VLAN_MASTER
+       bool "Create devices for port VLANs on ext. switch"
+       depends on AVM_CPMAC
+       default n
+
+config AVMNET_VLAN_MASTER_STAG_8021Q
+       bool "uses VLAN-STAG 8021Q instead of 8021AD"
+       depends on AVM_CPMAC && AVMNET_VLAN_MASTER && (SOC_VR9 || ARCH_GEN3)
+       default n
+
+source "drivers/net/avm_cpmac/switch/ifx/Kconfig"
+source "drivers/net/avm_cpmac/Kconfig.atheros"
+
+endif # NET_VENDOR_AVM

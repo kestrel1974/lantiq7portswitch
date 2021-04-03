@@ -1,0 +1,8 @@
+linux/avmnet.h avm/net/net.h
+net/ifx_ppa_api_common.h avm/net/ifx_ppa_api_common.h
+net/ifx_ppa_api_directpath.h avm/net/ifx_ppa_api_directpath.h
+net/ifx_ppa_api.h avm/net/ifx_ppa_api.h
+net/ifx_ppa_hook.h avm/net/ifx_ppa_hook.h
+net/ifx_ppa_ppe_hal.h avm/net/ifx_ppa_ppe_hal.h
+net/ifx_ppa_stack_al.h avm/net/ifx_ppa_stack_al.h
+net/ltq_eth_oam_handler.h avm/net/ltq_eth_oam_handler.h

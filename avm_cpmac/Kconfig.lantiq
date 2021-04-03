@@ -1,0 +1,6 @@
+#this file is included only if KERNEL_VERSION >= 3.10
+
+if LANTIQ
+source "drivers/net/ethernet/avm/avm_cpmac/switch/ifx/Kconfig"
+endif
+

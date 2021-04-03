@@ -1,0 +1,106 @@
+#
+# Atheros device configuration (AVM avm_cpmac extension)
+#
+
+menuconfig NET_VENDOR_AVM_ATHEROS
+	bool "Enable Atheros device support in avm_cpmac"
+	default y
+	depends on AVM_CPMAC
+	---help---
+	  Note that the answer to this question doesn't directly affect the
+	  kernel: saying N will just cause the configurator to skip all
+	  the questions about Atheros devices. If you say Y, you will be asked
+	  for your specific card in the following questions.
+
+if NET_VENDOR_AVM_ATHEROS
+
+config AG7240
+	tristate "Atheros AR7240 GigE"
+	depends on SOC_AR71XX || SOC_AR724X || SOC_AR933X || SOC_AR934X || SOC_QCA955X
+	help
+	  This enables the building of Atheros AR7240 gigE driver module.
+
+config AR7240_PLC_FILTER
+	bool "Support power line filter"
+	depends on AG7240
+
+config FLOWMAC
+	tristate "Atheros Flowcontrol For GigE and Wifi"
+	depends on AG7240
+	help
+	  This enables the building of Flow control between AG7100 and Wifi.
+
+config AR7240_S26_VLAN_IGMP
+	bool "Support vlan and igmp functions in AR7240-S26 switch"
+	depends on AG7240
+
+config AR7240_S16_VLAN_IGMP
+	bool "Support vlan and igmp functions in AR7240-S16 switch"
+	depends on AG7240
+
+config ATHEROS_HEADER_EN
+	bool "Add two bytes atheros header before the ethernet packet."
+	depends on AG7240
+
+################################################################# 
+config ATHRF2_PHY
+	bool "Atheros F2 Phy"
+
+config AR8033_PHY
+	bool "Atheros AR8033 Phy"
+
+	config ATHRS17_PHY
+	bool "Atheros S17 external Phy"
+
+config ATHRS27_PHY
+	bool "Atheros S27 internal Phy"
+
+config LANTIQ_11G_PHY
+	bool "Lantiq 11G Phy"
+
+config WLAN_OFFLOAD_PHY
+	bool "WLAN Offload Phy"
+	depends on LANTIQ
+
+config ATH_PLC_PHY
+	bool "PLC Phy"
+	depends on ATH79
+
+config SCRPN_TARGET_PHY
+	bool "QCA Scorpion Target PHY"
+	depends on ATH79
+
+config DUMMY_PHY
+	bool "Dummy Phy"
+	---help---
+	  Dummy phy that always got a link after poweron. Used to accomodate a
+	  virtual avmnet device.
+
+######################################################################
+config ATHR_PHY_SWAP
+	bool "Atheros PHY Swap "
+	depends on SOC_AR934X
+
+######################################################################
+config AG7240_QOS
+	bool "Enable MAC 0 QOS "
+	depends on AG7240
+
+config ATHRS_HW_NAT
+	bool "Enable MAC 0 Egress and Ingress NAT engine "
+	depends on AG7240
+
+config ATHRS_HW_ACL
+	bool "Enable MAC 0 Egress and Ingress ACL engine "
+	depends on AG7240
+
+endif # NET_VENDOR_AVM_ATHEROS
+
+config IPQ806X_GMAC
+	bool "QCA's IPQ806x GMAC support in avm_cpmac"
+	depends on AVM_CPMAC && ARCH_QCOM
+	select NET_VENDOR_AVM_ATHEROS
+	select ATHRS17_PHY
+	select ATHRF2_PHY
+	help
+	  Enable cpmac support for IPQ806x GMAC, used in Qualcomm Akronite.

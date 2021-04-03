@@ -1,0 +1,64 @@
+#!/bin/sh
+echo
+echo AVMNET
+echo --------
+echo
+echo RMON Counter Dump
+echo --------
+for i in /proc/driver/avmnet/*/rmon_all;
+do
+	echo "${i}"
+	cat "${i}"
+	echo
+done
+
+cat /proc/driver/ifx_dma/ifx_dma_register 
+
+echo PHY MDIO Register Dump
+echo --------
+for i in /proc/driver/avmnet/*/mdio_regs;
+do
+	echo "${i}" 
+	cat "${i}"
+done 
+
+echo
+echo IFX PPA 
+echo --------
+if [ -e /proc/eth/avm_wan_mode ] ; then  echo  "AVM WAN MODE: `cat /proc/eth/avm_wan_mode`" ; fi
+lsmod | grep ppa
+
+if [ -e /proc/eth/wanmib ] ; then  cat /proc/eth/wanmib ; fi
+
+if [ -e /proc/eth/mib ] ; then  cat /proc/eth/mib ; fi
+
+if [ -e /proc/eth/htu ] ; then  
+    echo "IFX HTU DUMP:"
+    cat /proc/eth/htu 
+fi
+
+if [ -e /proc/driver/avmnet/swi_*/ppe_sessions ] ; then  
+    echo "IFX PPA HW Sessions:"
+    cat /proc/driver/avmnet/swi_*/ppe_sessions
+fi
+
+if [ -e /proc/driver/avmnet/swi_*/mac_table ] ; then  
+    echo "IFX SWI MAC Table:"
+    cat /proc/driver/avmnet/swi_*/mac_table
+fi
+
+if [ -e /proc/driver/avmnet/swi_*/pa_pce_sessions ] ; then  
+    echo "IFX PCE HW Sessions:"
+    cat /proc/driver/avmnet/swi_*/pa_pce_sessions
+fi
+
+if [ -e /proc/driver/avmnet/swi_*/avm_pa_ifx_multiplexer ] ; then  
+    echo "IFX PPA MULTIPLEXER:"
+    cat /proc/driver/avmnet/swi_*/avm_pa_ifx_multiplexer
+fi
+
+if [ -e /var/log/notify_avmnet.log ] ; then  
+    echo "Lib-Notify-Log:"
+    cat /var/log/notify_avmnet.log
+fi
+
